@@ -78,20 +78,13 @@ npm run test:coverage
 
 1. When the app loads, it will automatically request permission to access your GPS location
 2. Once permission is granted, the app will fetch weather data for your current location
-3. The weather information includes:
-   - Current temperature
-   - Feels like temperature
-   - Weather conditions and description
-   - Humidity
-   - Atmospheric pressure
-   - Wind speed and direction
-   - Visibility
+3. The weather information will be displayed after location permissions are granted. 
 4. Click the "Refresh" button to update your location and fetch fresh weather data
 
 ## Error Handling
 
 The app handles various error scenarios:
-- Location access denied by user
+- Location access denied by the user.
 - Location information unavailable
 - Network errors
 - API errors
