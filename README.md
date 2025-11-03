@@ -2,6 +2,8 @@
 
 A React single-page application that displays weather conditions based on the user's current GPS location.
 
+![Weather App Display](./public/display.PNG)
+
 ## Features
 
 - 🔍 Automatic GPS location detection on app launch
@@ -98,7 +100,6 @@ All errors are displayed with user-friendly messages and a "Try Again" button.
 ## API
 
 This app uses the OpenWeatherMap API:
-- API Key: 53f9d8e4213222cf517d86dc406d67fc
 - API Documentation: http://openweathermap.org/
 
 ## Technologies Used
