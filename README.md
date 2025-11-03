@@ -29,7 +29,9 @@ cd weather-app
 
 2. Install dependencies:
 ```bash
-npm install
+npm install 
+or
+yarn
 ```
 
 3. Start the development server:
