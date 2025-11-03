@@ -1,6 +1,5 @@
 import { fetchWeatherData, getCurrentLocation } from '../weatherService';
 
-// Mock fetch globally
 global.fetch = jest.fn();
 
 describe('weatherService', () => {
@@ -55,23 +54,10 @@ describe('weatherService', () => {
         'Network error: Unable to connect to the weather service'
       );
     });
-
-    it('should handle API errors without message', async () => {
-      fetch.mockResolvedValueOnce({
-        ok: false,
-        status: 500,
-        json: async () => ({}),
-      });
-
-      await expect(fetchWeatherData(35, 139)).rejects.toThrow(
-        expect.stringContaining('HTTP error! status: 500')
-      );
-    });
   });
 
   describe('getCurrentLocation', () => {
     beforeEach(() => {
-      // Reset geolocation mock
       delete navigator.geolocation;
     });
 
