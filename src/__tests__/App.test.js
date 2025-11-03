@@ -1,10 +1,9 @@
 import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from '../App';
 import * as weatherService from '../services/weatherService';
 
-// Mock the weather service
 jest.mock('../services/weatherService');
 
 describe('App', () => {
@@ -44,9 +43,7 @@ describe('App', () => {
 
     render(<App />);
 
-    await waitFor(() => {
-      expect(screen.getByText('Shuzenji')).toBeInTheDocument();
-    });
+    expect(await screen.findByText('Shuzenji', {}, { timeout: 500 })).toBeInTheDocument();
 
     expect(weatherService.getCurrentLocation).toHaveBeenCalledTimes(1);
     expect(weatherService.fetchWeatherData).toHaveBeenCalledWith(
@@ -63,10 +60,7 @@ describe('App', () => {
 
     render(<App />);
 
-    await waitFor(() => {
-      expect(screen.getByText(errorMessage)).toBeInTheDocument();
-    });
-
+    expect(await screen.findByText(errorMessage, {}, { timeout: 500 })).toBeInTheDocument();
     expect(screen.getByText('Try Again')).toBeInTheDocument();
   });
 
@@ -79,10 +73,7 @@ describe('App', () => {
 
     render(<App />);
 
-    await waitFor(() => {
-      expect(screen.getByText(errorMessage)).toBeInTheDocument();
-    });
-
+    expect(await screen.findByText(errorMessage, {}, { timeout: 500 })).toBeInTheDocument();
     expect(screen.getByText('Try Again')).toBeInTheDocument();
   });
 
@@ -101,23 +92,13 @@ describe('App', () => {
 
     render(<App />);
 
-    await waitFor(() => {
-      expect(screen.getByText('Shuzenji')).toBeInTheDocument();
-    });
+    expect(await screen.findByText('Shuzenji', {}, { timeout: 500 })).toBeInTheDocument();
 
     const refreshButton = screen.getByText('Refresh');
     await userEvent.click(refreshButton);
 
-    await waitFor(
-      () => {
-        expect(screen.getByText('Loading weather data...')).toBeInTheDocument();
-      },
-      { timeout: 100 }
-    );
-
-    await waitFor(() => {
-      expect(screen.getByText('Shuzenji')).toBeInTheDocument();
-    });
+    expect(await screen.findByText('Loading weather data...', {}, { timeout: 200 })).toBeInTheDocument();
+    expect(await screen.findByText('Shuzenji', {}, { timeout: 500 })).toBeInTheDocument();
 
     expect(weatherService.getCurrentLocation).toHaveBeenCalledTimes(2);
     expect(weatherService.fetchWeatherData).toHaveBeenCalledTimes(2);
@@ -132,27 +113,23 @@ describe('App', () => {
 
     render(<App />);
 
-    await waitFor(() => {
-      expect(screen.getByText(errorMessage)).toBeInTheDocument();
-    });
+    expect(await screen.findByText(errorMessage, {}, { timeout: 500 })).toBeInTheDocument();
 
     const tryAgainButton = screen.getByText('Try Again');
     await userEvent.click(tryAgainButton);
 
-    await waitFor(() => {
-      expect(screen.getByText('Shuzenji')).toBeInTheDocument();
-    });
+    expect(await screen.findByText('Shuzenji', {}, { timeout: 500 })).toBeInTheDocument();
 
     expect(weatherService.getCurrentLocation).toHaveBeenCalledTimes(2);
   });
 
-  it('should display app title', () => {
+  it('should display app title', async () => {
     weatherService.getCurrentLocation.mockResolvedValueOnce(mockLocation);
     weatherService.fetchWeatherData.mockResolvedValueOnce(mockWeatherData);
 
     render(<App />);
 
     expect(screen.getByText('Weather App')).toBeInTheDocument();
+    expect(await screen.findByText('Shuzenji', {}, { timeout: 500 })).toBeInTheDocument();
   });
 });
-
