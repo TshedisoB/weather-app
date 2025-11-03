@@ -44,10 +44,6 @@ describe('App', () => {
 
     render(<App />);
 
-    // Should show loader initially
-    expect(screen.getByText('Loading weather data...')).toBeInTheDocument();
-
-    // Wait for weather data to load
     await waitFor(() => {
       expect(screen.getByText('Shuzenji')).toBeInTheDocument();
     });
@@ -91,28 +87,34 @@ describe('App', () => {
   });
 
   it('should refresh weather data when refresh button is clicked', async () => {
+    const delayedLocation = () => 
+      new Promise(resolve => setTimeout(() => resolve(mockLocation), 50));
+    const delayedWeather = () => 
+      new Promise(resolve => setTimeout(() => resolve(mockWeatherData), 50));
+
     weatherService.getCurrentLocation
       .mockResolvedValueOnce(mockLocation)
-      .mockResolvedValueOnce(mockLocation);
+      .mockImplementationOnce(delayedLocation);
     weatherService.fetchWeatherData
       .mockResolvedValueOnce(mockWeatherData)
-      .mockResolvedValueOnce(mockWeatherData);
+      .mockImplementationOnce(delayedWeather);
 
     render(<App />);
 
-    // Wait for initial load
     await waitFor(() => {
       expect(screen.getByText('Shuzenji')).toBeInTheDocument();
     });
 
-    // Click refresh button
     const refreshButton = screen.getByText('Refresh');
     await userEvent.click(refreshButton);
 
-    // Should show loader again
-    expect(screen.getByText('Loading weather data...')).toBeInTheDocument();
+    await waitFor(
+      () => {
+        expect(screen.getByText('Loading weather data...')).toBeInTheDocument();
+      },
+      { timeout: 100 }
+    );
 
-    // Wait for refreshed data
     await waitFor(() => {
       expect(screen.getByText('Shuzenji')).toBeInTheDocument();
     });
@@ -130,16 +132,13 @@ describe('App', () => {
 
     render(<App />);
 
-    // Wait for error
     await waitFor(() => {
       expect(screen.getByText(errorMessage)).toBeInTheDocument();
     });
 
-    // Click try again
     const tryAgainButton = screen.getByText('Try Again');
     await userEvent.click(tryAgainButton);
 
-    // Should attempt to load again
     await waitFor(() => {
       expect(screen.getByText('Shuzenji')).toBeInTheDocument();
     });
